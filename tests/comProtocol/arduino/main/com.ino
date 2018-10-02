@@ -27,15 +27,11 @@ void comReadPack()
   while (Serial.available())           // Пока в буфере есть что читать и пакет не является принятым
   {
     int bufferChar = Serial.read();                           // Читаем очередной байт из буфера
-    if (!comCheckMarkerStart(bufferChar))
-      comCheckBadCommandStart();
-    else {
+    if (comCheckMarkerStart(bufferChar))
       if (comCheckMarkerEnd(bufferChar)){
         comMainProcessor();
         comReset();
-      } else
-        comCheckBadCommandEnd();
-    }
+      }
   }
 }
 
@@ -46,10 +42,9 @@ boolean comCheckMarkerStart(int inChar){
   // главный блок проверки команд
   // <th>
   if (comCurStartCommand.equals(commandTHStart)){
-    comCurStartCommandCompleted = true;
-    return true;  
+    comCurStartCommandCompleted = true; 
   }
-  Serial.println(comCurStartCommand);
+  Serial.println("start: " + comCurStartCommand);
   
   return false;
 }
@@ -68,9 +63,10 @@ boolean comCheckMarkerEnd(int inChar){
     comCurEndCommandCompleted = true;
     comCurReceiveEndCommand = commandTHEnd;
     comDataString = comExtractData();
-    Serial.println(comDataString);
+    Serial.println("data: " + comDataString);
     return true;  
   }
+  Serial.println("end: " + comCurEndCommand);
   
   return false;
 }

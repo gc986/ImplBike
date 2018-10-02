@@ -16,7 +16,7 @@ void setup() {
   
   lcdTimeFrame();
   lcdPrintHour("00");
-  lcdPrintMin("00");
+  lcdPrintMin("01");
 }
 
 void loop() {
